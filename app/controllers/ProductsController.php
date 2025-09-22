@@ -209,4 +209,20 @@ class ProductsController extends Controller {
             exit();
          }
     }
+
+    // API endpoint for product search
+    public function search() {
+        $term = $_GET['q'] ?? '';
+
+        if (strlen($term) < 2) {
+            echo json_encode([]);
+            exit();
+        }
+
+        $products = $this->productModel->search($term);
+
+        header('Content-Type: application/json');
+        echo json_encode($products);
+        exit();
+    }
 }

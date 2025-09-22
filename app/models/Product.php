@@ -70,4 +70,20 @@ class Product extends Model {
 
         return false;
     }
+
+    public function updateStock($productId, $quantityChange) {
+        $sql = "UPDATE products SET quantity = quantity + :quantityChange, updated_at = CURRENT_TIMESTAMP WHERE id = :id";
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute([
+            'quantityChange' => $quantityChange,
+            'id' => $productId
+        ]);
+    }
+
+    public function search($term) {
+        $sql = "SELECT id, name, sku, sale_price FROM products WHERE name LIKE :term OR sku LIKE :term LIMIT 10";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute(['term' => '%' . $term . '%']);
+        return $stmt->fetchAll();
+    }
 }
